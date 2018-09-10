@@ -117,6 +117,7 @@ def game_hash
   }
 end
 
+#returns # of points scored by that player
 def num_points_scored(player_name)
   game_hash.each do |location, team_data|
     team_data[:players].each do |name, data|
@@ -126,7 +127,7 @@ def num_points_scored(player_name)
     end
   end
 end
-
+#returns shoe size for that player
 def shoe_size(player_name)
   game_hash.each do |location, team_data|
     team_data[:players].each do |name, data|
@@ -136,7 +137,7 @@ def shoe_size(player_name)
     end
   end
 end
-
+#returns an array of team colors
 def team_colors(teams)
   game_hash.each do |location, team_data|
     if team_data[:team_name] == teams
@@ -144,74 +145,47 @@ def team_colors(teams)
     end
   end
 end
-
+#returns array of team names
 def team_names
   game_hash.map do |location, team_data|
       team_data[:team_name]
   end
 end
-
-
-def player_numbers(team)
+#returns array of players and their jersey number
+def player_numbers(name)
     new_array = []
-    if game_hash[:home][:team_name] == team
-      game_hash[:home][:players].each do |name, stats|
-        stats.each do |stat_label, stat_value|
-          if stat_label == :number
-            new_array << stat_value
-          end
-        end
-      end
-    else
-      game_hash[:away][:players].each do |name, stats|
-        stats.each do |stat_label, stat_value|
-          if stat_label == :number
-            new_array << stat_value
-          end
-        end
-      end
-    end
-    new_array
-  end
-
-
-def player_stats(name)
-  player_stats = nil
-  game_hash.each do |home_away, team_info|
-    team_info.each do |data_label, data|
-      if data_label == :players
-        data.each do |player_name, stats|
-          if player_name == name
-            player_stats = stats
-          end
-        end
-      end
+    game_hash.each do |location, team_data|
+    if team_data[:team_name] == name
+    team_data[:players].each do |player_name, value|
+      new_array << value[:number]
     end
   end
-  player_stats
 end
-
-def big_shoe_rebounds
-  biggest_shoe = nil
-  big_shoe_player_rebounds = nil
-  game_hash.each do |home_or_away, team_info|
-    team_info.each do |data_label, data|
-      if data_label == :players
-        data.each do |player_name, stats|
-          stats.each do |stat_name, value|
-            if stat_name == :shoe
-              if biggest_shoe == nil
-                biggest_shoe = value
-                big_shoe_player_rebounds = game_hash[home_or_away][:players][player_name][:rebounds]
-              elsif value > biggest_shoe
-                biggest_shoe = value
-                big_shoe_player_rebounds = game_hash[home_or_away][:players][player_name][:rebounds]
-              end
-            end
-          end
+new_array
+end
+#returns hash of each player and their stats
+def player_stats(name)
+  game_hash.each do |location, team_data|
+    team_data[:players].each do |player_name, value|
+        if player_name == name
+          return value
         end
       end
     end
   end
-  big_shoe_player_rebounds
+
+
+#method finds player w biggest shoe size and returns # of rebounds
+def big_shoe_rebounds
+  shoe_size = 0
+  rebounds = 0
+  game_hash.each do |location, team_data|
+    team_data[:players].each do |player_name, value|
+      if value[:shoe] > shoe_size
+        shoe_size = value[:shoe]
+        rebounds = value[:rebounds]
+          end
+        end
+      end
+  rebounds
 end
