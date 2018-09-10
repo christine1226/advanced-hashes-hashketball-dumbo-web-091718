@@ -160,6 +160,7 @@ def player_numbers(name)
     return team_data[:players].map do |player_name, value|
       value[:number]
     end
+    end
   end
 end
 #returns hash of each player and their stats
